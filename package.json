@@ -1,0 +1,11 @@
+{
+  "name": "ecommerce-tutorial-using-mern-stack",
+  "version": "1.0.0",
+  "description": "Resturant app with MERN",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Shakky",
+  "license": "ISC"
+}
