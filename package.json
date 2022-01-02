@@ -4,12 +4,14 @@
   "description": "Resturant app with MERN",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "start-server": "nodemon server.js"
   },
   "author": "Shakky",
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.2",
-    "mongoose": "^6.1.4"
+    "mongoose": "^6.1.4",
+    "nodemon": "^2.0.15"
   }
 }
