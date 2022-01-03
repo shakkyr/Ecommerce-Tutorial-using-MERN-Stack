@@ -72,7 +72,8 @@ const Signup = () => {
                     console.log('axios failed', err)
                     setFormData({
                         ...formData,
-                        loading:false
+                        loading:false,
+                        errorMsg: err.response.data.errorMessage,
                     })
                 })
       }
