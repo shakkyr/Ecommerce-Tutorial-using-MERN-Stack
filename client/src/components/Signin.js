@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useState , useEffect} from 'react'
 import { Link, useHistory } from "react-router-dom";
 import {showErrorMsg} from '../helpers/message'
 import { showLoading } from "../helpers/loading";
@@ -9,6 +9,14 @@ import { setAuthentication , isAuthenticated} from '../helpers/auth';
 
 const Signin = () => {
     let history = useHistory();
+
+    useEffect(() => {
+        if (isAuthenticated() && isAuthenticated().role === 1) {
+            history.push('/admin/dashboard');
+        } else if (isAuthenticated() && isAuthenticated().role === 0) {
+            history.push('/user/dashboard');
+        }
+    }, [history]);
 
     const [formData , setFormData] = useState({
         email: '',
