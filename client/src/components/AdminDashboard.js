@@ -10,6 +10,11 @@ const AdminDashboard = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const handleMessages = event => {
+      setErrorMsg('')
+      setSuccessMsg('')
+  }
+
   const handleCategoryChange = (event) => {
     setCategory(event.target.value);
     setErrorMsg('')
@@ -27,9 +32,11 @@ const AdminDashboard = () => {
         const data = { category };
         setLoading(true)
         createCategory(data)
+        
             .then(response => {
                 setLoading(false);
                 setSuccessMsg(response.data.successMessage)
+                setCategory('')
             })
             .catch(error =>{
                 setLoading(false)
@@ -86,7 +93,7 @@ const AdminDashboard = () => {
   );
 
   const showCategoryModal = () => (
-    <div className="modal fade" id="addCategoryModal">
+    <div className="modal fade" id="addCategoryModal" onClick={handleMessages}>
       <div className="modal-dialog modal-dialog-centered modal-lg ">
         <div className="modal-content">
           <form onSubmit={handleCategorySubmit}>
@@ -106,7 +113,7 @@ const AdminDashboard = () => {
               {successMsg && showSuccessMsg(successMsg)}
 
               {
-                  loading ? showLoading() : <Fragment>
+                  loading ? <div className="text-center" > {showLoading()} </div> : <Fragment>
 
               <label className="text-secondary">Category</label>
               <input
