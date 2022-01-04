@@ -68,6 +68,11 @@ const Signin = () => {
                 })
                 .catch(error =>{
                     console.log('sign in api error :', error);
+                    setFormData({
+                        ...formData,
+                        loading:false,
+                        errorMsg: error.response.data.errorMessage,
+                    })
                 })
                   
         }
