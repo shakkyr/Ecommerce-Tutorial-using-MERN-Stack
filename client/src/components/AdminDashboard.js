@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { createCategory , getCategories } from "../api/category";
+import { createProduct } from "../api/product";
 import isEmpty from "validator/lib/isEmpty";
 import { showErrorMsg, showSuccessMsg } from "../helpers/message";
 import { showLoading } from "../helpers/loading";
-import { response } from "express";
+// import { response } from "express";
 
 const AdminDashboard = () => {
   const [categories, setCategories] = useState(null)
@@ -11,22 +12,33 @@ const AdminDashboard = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [produtData, setProdutData] = useState({
+      productImage : null,
+      productName : '',
+      productDesc : '',
+      productPrice : '',
+      productCategory : '',
+      productQty : '',
+  })
+
+  const {productImage,productName,productDesc,productPrice,productCategory,productQty} = produtData
 
   // !============= lifecycle methods ===============
   useEffect(()=> {
     loadCategories()
-  }, [])
+  }, [loading])
 
   const loadCategories = async () => {
     await getCategories()
           .then( response => {
             setCategories(response.data.categories)
+            console.log(categories);
           })
           .catch(error => {
             console.log(error);
           })
   }
-
+// !================ event handlers =================
   const handleMessages = (event) => {
     setErrorMsg("");
     setSuccessMsg("");
@@ -58,6 +70,46 @@ const AdminDashboard = () => {
         });
     }
   };
+
+  const handleProductImage = (event) => {
+    setProdutData({
+      ...produtData,
+      [event.target.name] : event.target.files[0]
+    })
+
+  }
+
+  const handleProductChange = event =>{
+      setProdutData({
+        ...produtData,
+        [event.target.name] : event.target.value
+      })
+  }
+
+  const handleProductSubmit = event => {
+    event.preventDefault()
+
+    if (productImage === null) {
+      setErrorMsg('Please select an image')
+    }  if (isEmpty(productName) || isEmpty(productDesc) || isEmpty(productPrice)) {
+      setErrorMsg('all fields are required')
+    } else if (isEmpty(productCategory)) {
+      setErrorMsg('please select a category')
+    } else if (isEmpty(productQty)) {
+      setErrorMsg('please select a quantity')
+    } else {
+        let formDate = new FormData
+
+        formDate.append('productImage', productImage);
+        formDate.append('productName', productName);
+        formDate.append('productDesc', productDesc);
+        formDate.append('productPrice', productPrice);
+        formDate.append('productCategory', productCategory);
+        formDate.append('productQty', productQty);
+
+        createProduct(formDate)
+    }
+  }
 
   // !==================================
   //VIEWS
@@ -220,7 +272,7 @@ const AdminDashboard = () => {
     <div className="modal fade" id="addFoodModal" onClick={handleMessages}>
       <div className="modal-dialog modal-dialog-centered modal-lg ">
         <div className="modal-content">
-          <form onSubmit={handleCategorySubmit}>
+          <form onSubmit={handleProductSubmit}>
             <div className="modal-header bg-warning text-white">
               <h5 className="modal-title" id="exampleModalLabel">
                 Add Food
@@ -247,6 +299,8 @@ const AdminDashboard = () => {
                       id="inputGroupFile04"
                       aria-describedby="inputGroupFileAddon04"
                       aria-label="Upload"
+                      name="productImage"
+                      onChange={handleProductImage}
                     />
                     {/* <label className='input-group-text' for="inputGroupFile02" >
                         Choose File
@@ -255,15 +309,15 @@ const AdminDashboard = () => {
                   </div>
                   <div className="form-group">
                     <label className="text-secondary">Name</label>
-                    <input type="text" className="form-control" />
+                    <input type="text" className="form-control" name="productName" value={productName} onChange={handleProductChange}/>
                   </div>
                   <div className=" form-group">
                     <label className="text-secondary">Description</label>
-                    <textarea className="form-control" rows="3"></textarea>
+                    <textarea className="form-control" rows="3" name="productDesc" value={productDesc} onChange={handleProductChange}></textarea>
                   </div>
                   <div className="form-group">
                     <label className="text-secondary">Price</label>
-                    <input type="text" className="form-control"></input>
+                    <input type="text" className="form-control" name="productPrice" value={productPrice} onChange={handleProductChange} />
                   </div>
                   <div className="row g-2">
                     <div className="col-md">
@@ -272,11 +326,13 @@ const AdminDashboard = () => {
                           className="form-select"
                           id="floatingSelectGrid"
                           aria-label="Floating label select example"
+                          name="productCategory"
+                          onChange={handleProductChange}
                         >
-                          <option defaultValue>select one</option>
-                          <option value="1">One</option>
-                          <option value="2">Two</option>
-                          <option value="3">Three</option>
+                          <option value='' >select one</option>
+                          {categories && categories.map(ele => (
+                            <option key={ele._id} value={ele._id} >{ele.category} </option>
+                          ))}
                         </select>
                         <label htmlFor="floatingSelectGrid">
                           Category
@@ -291,6 +347,9 @@ const AdminDashboard = () => {
                           id="floatingInputGrid"
                           min='0'
                           max='1000'
+                          name="productQty" 
+                          value={productQty}
+                          onChange={handleProductChange}
                         />
                         <label htmlFor="floatingInputGrid">Quantity</label>
                       </div>
@@ -321,6 +380,7 @@ const AdminDashboard = () => {
   // !=============================
   return (
     <section>
+      {JSON.stringify({produtData})}
       {showHeader()}
       {showActionBtn()}
       {showCategoryModal()}
