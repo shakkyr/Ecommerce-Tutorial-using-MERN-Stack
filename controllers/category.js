@@ -20,3 +20,17 @@ exports.create = async (req,res) => {
         })
     }
 }
+exports.readAll = async (req,res) => {
+    try {
+        const categories = await Category.find({});
+        res.status(200).json({
+            categories : categories,
+        })
+        
+    } catch (err) {
+        console.log('category readAll error' , err);
+        res.status(500).json({
+            errorMessage: "please try again later"
+        })
+    }
+}
