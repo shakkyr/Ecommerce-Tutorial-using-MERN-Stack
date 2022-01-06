@@ -11,7 +11,25 @@ exports.create = async (req, res) => {
     try {
         let product = new Product()
         product.fileName = filename
+        product.productName = productName
+        product.productDesc = productDesc
+        product.productPrice = productPrice
+        product.productCategory = productCategory
+        product.productQty = productQty
+
+        await product.save()
+
+        res.json({
+            successMessage : `${productName} was crated`,
+            product
+        })
+
+
+
     } catch (error) {
-        log(error,'productController.create error')
+        console.log(error,'productController.create error')
+        res.status(500).json({
+            errorMessage : 'please try again later'
+        })
     }
 }
