@@ -98,7 +98,7 @@ const AdminDashboard = () => {
     } else if (isEmpty(productQty)) {
       setErrorMsg('please select a quantity')
     } else {
-        let formDate = new FormData
+        let formDate = new FormData()
 
         formDate.append('productImage', productImage);
         formDate.append('productName', productName);
@@ -108,6 +108,12 @@ const AdminDashboard = () => {
         formDate.append('productQty', productQty);
 
         createProduct(formDate)
+              .then(response => {
+                console.log('server response', response);
+              })
+              .catch(error => {
+                console.log(error);
+              })
     }
   }
 
@@ -380,7 +386,6 @@ const AdminDashboard = () => {
   // !=============================
   return (
     <section>
-      {JSON.stringify({produtData})}
       {showHeader()}
       {showActionBtn()}
       {showCategoryModal()}
