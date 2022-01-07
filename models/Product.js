@@ -6,7 +6,7 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    pproductName: {
+    productName: {
         type: String,
         required: true,
         trim: true,
@@ -25,7 +25,7 @@ const ProductSchema = new mongoose.Schema({
         ref: "Category",
         required: true
     },
-    producrQty : {
+    productQty : {
         type:Number,
         required: true
     }
