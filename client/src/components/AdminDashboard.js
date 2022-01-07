@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { createCategory , getCategories } from "../api/category";
+import { createCategory, getCategories } from "../api/category";
 import { createProduct } from "../api/product";
 import isEmpty from "validator/lib/isEmpty";
 import { showErrorMsg, showSuccessMsg } from "../helpers/message";
@@ -7,38 +7,45 @@ import { showLoading } from "../helpers/loading";
 // import { response } from "express";
 
 const AdminDashboard = () => {
-  const [categories, setCategories] = useState(null)
+  const [categories, setCategories] = useState(null);
   const [category, setCategory] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [produtData, setProdutData] = useState({
-      productImage : null,
-      productName : '',
-      productDesc : '',
-      productPrice : '',
-      productCategory : '',
-      productQty : '',
-  })
+    productImage: null,
+    productName: "",
+    productDesc: "",
+    productPrice: "",
+    productCategory: "",
+    productQty: "",
+  });
 
-  const {productImage,productName,productDesc,productPrice,productCategory,productQty} = produtData
+  const {
+    productImage,
+    productName,
+    productDesc,
+    productPrice,
+    productCategory,
+    productQty,
+  } = produtData;
 
   // !============= lifecycle methods ===============
-  useEffect(()=> {
-    loadCategories()
-  }, [loading])
+  useEffect(() => {
+    loadCategories();
+  }, [loading]);
 
   const loadCategories = async () => {
     await getCategories()
-          .then( response => {
-            setCategories(response.data.categories)
-            console.log(categories);
-          })
-          .catch(error => {
-            console.log(error);
-          })
-  }
-// !================ event handlers =================
+      .then((response) => {
+        setCategories(response.data.categories);
+        console.log(categories);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  // !================ event handlers =================
   const handleMessages = (event) => {
     setErrorMsg("");
     setSuccessMsg("");
@@ -74,48 +81,57 @@ const AdminDashboard = () => {
   const handleProductImage = (event) => {
     setProdutData({
       ...produtData,
-      [event.target.name] : event.target.files[0]
-    })
+      [event.target.name]: event.target.files[0],
+    });
+  };
 
-  }
+  const handleProductChange = (event) => {
+    setProdutData({
+      ...produtData,
+      [event.target.name]: event.target.value,
+    });
+  };
 
-  const handleProductChange = event =>{
-      setProdutData({
-        ...produtData,
-        [event.target.name] : event.target.value
-      })
-  }
-
-  const handleProductSubmit = event => {
-    event.preventDefault()
+  const handleProductSubmit = (event) => {
+    event.preventDefault();
 
     if (productImage === null) {
-      setErrorMsg('Please select an image')
-    }  if (isEmpty(productName) || isEmpty(productDesc) || isEmpty(productPrice)) {
-      setErrorMsg('all fields are required')
-    } else if (isEmpty(productCategory)) {
-      setErrorMsg('please select a category')
-    } else if (isEmpty(productQty)) {
-      setErrorMsg('please select a quantity')
-    } else {
-        let formDate = new FormData()
-
-        formDate.append('productImage', productImage);
-        formDate.append('productName', productName);
-        formDate.append('productDesc', productDesc);
-        formDate.append('productPrice', productPrice);
-        formDate.append('productCategory', productCategory);
-        formDate.append('productQty', productQty);
-
-        createProduct(formDate)
-              .then(response => {
-                console.log('server response', response);
-              })
-              .catch(error => {
-                console.log(error);
-              })
+      setErrorMsg("Please select an image");
     }
-  }
+    if (isEmpty(productName) || isEmpty(productDesc) || isEmpty(productPrice)) {
+      setErrorMsg("all fields are required");
+    } else if (isEmpty(productCategory)) {
+      setErrorMsg("please select a category");
+    } else if (isEmpty(productQty)) {
+      setErrorMsg("please select a quantity");
+    } else {
+      let formDate = new FormData();
+
+      formDate.append("productImage", productImage);
+      formDate.append("productName", productName);
+      formDate.append("productDesc", productDesc);
+      formDate.append("productPrice", productPrice);
+      formDate.append("productCategory", productCategory);
+      formDate.append("productQty", productQty);
+
+      createProduct(formDate)
+        .then((response) => {
+          setProdutData({
+            productImage: null,
+            productName: "",
+            productDesc: "",
+            productPrice: "",
+            productCategory: "",
+            productQty: "",
+          });
+          setSuccessMsg(response.data.successMessage)
+        })
+        .catch((error) => {
+          console.log(error);
+          setErrorMsg(error.response.data.errorMessage)
+        });
+    }
+  };
 
   // !==================================
   //VIEWS
@@ -315,15 +331,33 @@ const AdminDashboard = () => {
                   </div>
                   <div className="form-group">
                     <label className="text-secondary">Name</label>
-                    <input type="text" className="form-control" name="productName" value={productName} onChange={handleProductChange}/>
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="productName"
+                      value={productName}
+                      onChange={handleProductChange}
+                    />
                   </div>
                   <div className=" form-group">
                     <label className="text-secondary">Description</label>
-                    <textarea className="form-control" rows="3" name="productDesc" value={productDesc} onChange={handleProductChange}></textarea>
+                    <textarea
+                      className="form-control"
+                      rows="3"
+                      name="productDesc"
+                      value={productDesc}
+                      onChange={handleProductChange}
+                    ></textarea>
                   </div>
                   <div className="form-group">
                     <label className="text-secondary">Price</label>
-                    <input type="text" className="form-control" name="productPrice" value={productPrice} onChange={handleProductChange} />
+                    <input
+                      type="text"
+                      className="form-control"
+                      name="productPrice"
+                      value={productPrice}
+                      onChange={handleProductChange}
+                    />
                   </div>
                   <div className="row g-2">
                     <div className="col-md">
@@ -335,14 +369,15 @@ const AdminDashboard = () => {
                           name="productCategory"
                           onChange={handleProductChange}
                         >
-                          <option value='' >select one</option>
-                          {categories && categories.map(ele => (
-                            <option key={ele._id} value={ele._id} >{ele.category} </option>
-                          ))}
+                          <option value="">select one</option>
+                          {categories &&
+                            categories.map((ele) => (
+                              <option key={ele._id} value={ele._id}>
+                                {ele.category}{" "}
+                              </option>
+                            ))}
                         </select>
-                        <label htmlFor="floatingSelectGrid">
-                          Category
-                        </label>
+                        <label htmlFor="floatingSelectGrid">Category</label>
                       </div>
                     </div>
                     <div className="col-md">
@@ -351,9 +386,9 @@ const AdminDashboard = () => {
                           type="number"
                           className="form-control"
                           id="floatingInputGrid"
-                          min='0'
-                          max='1000'
-                          name="productQty" 
+                          min="0"
+                          max="1000"
+                          name="productQty"
                           value={productQty}
                           onChange={handleProductChange}
                         />
