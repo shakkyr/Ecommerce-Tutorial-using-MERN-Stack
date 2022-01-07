@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 //components
 import AdminHeader from './AdminHeader'
@@ -7,8 +7,7 @@ import AdminCategoryModel from "./AdminCategoryModel";
 import AdminProductModel from "./AdminProductModel";
 
 const AdminDashboard = () => {
-
-
+  
   return (
     <section>
       <AdminHeader />
