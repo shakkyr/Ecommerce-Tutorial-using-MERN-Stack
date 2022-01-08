@@ -2,44 +2,65 @@ import React,{Fragment, useState} from 'react'
 import { showErrorMsg, showSuccessMsg } from "../helpers/message";
 import { showLoading } from "../helpers/loading";
 import isEmpty from "validator/lib/isEmpty";
-import { createCategory } from "../api/category";
+// import { createCategory } from "../api/category"; // replaced with redux
+//redux 
+import {useSelector, useDispatch} from 'react-redux' //!selector hepls to grap a propety from our state // dispatch hepls to fire action from redux
+import {clearMessages} from '../redux/actions/messageActions'
+import {createCategory} from '../redux/actions/categoryActions'
 
 const AdminCategoryModel = () => {
+  // ============= redux global state properties=============
+  const { successMsg, errorMsg } = useSelector(state => state.messages) //! state.messages => from store reducer
+    const {loading} = useSelector(state => state.loading) //! state.loading => from store reducer
+
+    const dispatch = useDispatch()
+
+
+
+
+
+  // ============= component state properties=============
+
     const [category, setCategory] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
-    const [successMsg, setSuccessMsg] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [clientSideErrorMsg, setClientSideErrorMsg] = useState('');
+    // const [errorMsg, setErrorMsg] = useState(""); //!replaced with redux above
+    // const [successMsg, setSuccessMsg] = useState("");
+    // const [loading, setLoading] = useState(false);
 
 
     const handleMessages = (event) => {
-        setErrorMsg("");
-        setSuccessMsg("");
+        // setErrorMsg("");
+        // setSuccessMsg(""); //! replaced tihe redux benith
+        dispatch(clearMessages(),)
       };
 
       const handleCategoryChange = (event) => {
+        dispatch(clearMessages())
         setCategory(event.target.value);
-        setErrorMsg("");
-        setSuccessMsg("");
+        // setErrorMsg("");
+        // setSuccessMsg("");//! replaced tihe redux above
       };
     
       const handleCategorySubmit = (event) => {
         event.preventDefault();
     
         if (isEmpty(category)) {
-          setErrorMsg("Please enter a category");
+          setClientSideErrorMsg('Please enter a category');
         } else {
           const data = { category };
-          setLoading(true);
-          createCategory(data)
-            .then((response) => {
-              setLoading(false);
-              setSuccessMsg(response.data.successMessage);
-              setCategory("");
-            })
-            .catch((error) => {
-              setLoading(false);
-              setErrorMsg(error.response.data.errorMessage);
-            });
+			dispatch(createCategory(data));
+			setCategory('');
+          // setLoading(true);
+          // createCategory(data)
+          //   .then((response) => {
+          //     setLoading(false);
+          //     setSuccessMsg(response.data.successMessage);
+          //     setCategory("");
+          //   })
+          //   .catch((error) => {
+          //     setLoading(false);
+          //     setErrorMsg(error.response.data.errorMessage);
+          //   });
         }
       };
 
@@ -60,6 +81,8 @@ const AdminCategoryModel = () => {
                   ></button>
                 </div>
                 <div className="modal-body my-2">
+                {clientSideErrorMsg &&
+								showErrorMsg(clientSideErrorMsg)}
                   {errorMsg && showErrorMsg(errorMsg)}
                   {successMsg && showSuccessMsg(successMsg)}
     
