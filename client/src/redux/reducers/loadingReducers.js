@@ -1,23 +1,22 @@
-import {START_LOADING, STOP_LOADING} from '../constants/loadingConstants'
+import { START_LOADING, STOP_LOADING } from '../constants/loadingConstants';
 
 const INITIAL_STATE = {
-    loading: false,        //! property called loading the same name as the component state level
-}
+	loading: false,
+};
 
-const loadingReducer = (state=INITIAL_STATE, action)  => {
-    switch (action.type) {
-        case START_LOADING:
-            return {
-                loading: true
-                }
-        case STOP_LOADING :
-            return {
-                loading: false
-            }
-        default:
-            return state
-    }
+const loadingReducer = (state = INITIAL_STATE, action) => {
+	switch (action.type) {
+		case START_LOADING:
+			return {
+				loading: true,
+			};
+		case STOP_LOADING:
+			return {
+				loading: false,
+			};
+		default:
+			return state;
+	}
+};
 
-}
-
-export default loadingReducer
+export default loadingReducer;

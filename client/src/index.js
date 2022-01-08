@@ -1,21 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import App from './components/App';
-import reportWebVitals from './reportWebVitals';
-import {Provider} from 'react-redux';
-import store from './redux/store'
-
-const AppWrapper = ({ children }) => {
-  
-
-  return (<Provider store={store}>{children}</Provider>);
-}
-
+import * as serviceWorker from './serviceWorker';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 ReactDOM.render(
-  <AppWrapper> <App /> </AppWrapper>,
-  document.getElementById('root')
+	<Provider store={store}>
+		<App />
+	</Provider>,
+	document.getElementById('root')
 );
 
-reportWebVitals();
+serviceWorker.unregister();
