@@ -7,7 +7,7 @@ exports.getNewArrivals = async (req, res) => {
 	try {
 		const newArrivals = await Product.find({})
 			.sort({ createdAt: sortBy })
-			.limit(limit);
+			.limit(limit); //!limits the the recivied results from the server
 
 		res.json({
 			newArrivals,
