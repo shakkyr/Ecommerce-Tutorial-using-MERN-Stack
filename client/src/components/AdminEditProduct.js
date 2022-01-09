@@ -16,8 +16,8 @@ const AdminEditProduct = ({ match, history }) => {
 	 * REDUX GLOBAL STATE PROPERTIES
 	 ***************************/
 	const dispatch = useDispatch();
-	const { product } = useSelector(state => state.products);
-	const { categories } = useSelector(state => state.categories);
+	const { product } = useSelector(state => state.products);  //!destuctured from the reducer (product: action.paylpad)
+	const { categories } = useSelector(state => state.categories);//! selector helps us to pull state properties from redux
 
 	/****************************
 	 * COMPONENT STATE PROPERTIES
@@ -57,7 +57,7 @@ const AdminEditProduct = ({ match, history }) => {
 	const handleProductSubmit = async e => {
 		e.preventDefault();
 
-		const formData = new FormData();
+		const formData = new FormData(); //! built in to the browser because we are sending image and images considered formdate and thats we are using appened
 		formData.append('productImage', productImage);
 		formData.append('productName', productName);
 		formData.append('productDesc', productDesc);
@@ -67,7 +67,7 @@ const AdminEditProduct = ({ match, history }) => {
 
 		const config = {
 			headers: {
-				'Content-Type': 'multipart/form-data',
+				'Content-Type': 'multipart/form-data', //! if we norice here we are not using ('Content-Type': 'application/json',) because sending images
 			},
 		};
 
