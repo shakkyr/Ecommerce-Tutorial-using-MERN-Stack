@@ -1,7 +1,3 @@
-const LIVE = false;
-
-if (LIVE) {
-    module.exports = require('./prod.js');
-} else {
-    module.exports = require('./dev.js');
-}
+// All secrets come from environment variables (.env). dev.js was never
+// committed, so requiring it made fresh clones crash on startup.
+module.exports = require('./prod.js');
